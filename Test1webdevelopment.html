@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Manager</title>
+    <style>
+        .error { color: red; }
+        .container { margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #0909e8; padding: 8px; text-align: left; }
+        th { background-color: #bfbdbd; }
+    </style>
+</head>
+<body>
+        <center><h1>Activity Grade Chart</h1>
+
+        <div>
+            <h2>Add Activity</h2>
+            <label for="activity-name">Activity:</label>
+            <input type="text" id="activity-name">
+            <label for="activity-weight">Weight:</label>
+            <input type="number" id="activity-weight" min="1" max="100">
+            <button onclick="newActivity()">New Activity</button>
+            <div id="activity-error" class="error"></div>
+        </div>
+        <br>
+
+        <div>
+            <h2>Add Grade</h2>
+            <label for="activity-no">Activity No:</label>
+            <input type="number" id="activity-no" min="1">
+            <label for="grade">Grade:</label>
+            <input type="number" id="grade" min="0" max="100">
+            <button onclick="addGrade()">Add Grade</button>
+            <div id="grade-error" class="error"></div>
+        </div>
+        <br>
+
+        <div>
+            <button onclick="removeActivity()">Delete Activity</button>
+            <div id="delete-error" class="error"></div>
+        </div>
+        </center>
+
+        <div>
+            <h2>Activities</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Activity</th>
+                        <th>Weight</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="activity-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const activities = [];
+
+        function updateActivityTable() {
+            const tableBody = document.getElementById('activity-table-body');
+            tableBody.innerHTML = '';
+            activities.forEach((activity, index) => {
+                const row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${activity.name}</td>
+                    <td>${activity.weight}</td>
+                    <td>${activity.grade !== undefined ? activity.grade : 'N/A'}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        function newActivity() {
+            const name = document.getElementById('activity-name').value.trim();
+            const weight = parseInt(document.getElementById('activity-weight').value);
+
+            document.getElementById('activity-error').textContent = '';
+
+            if (!name) {
+                document.getElementById('activity-error').textContent = 'Error Message: Activity name is rejected.';
+                return;
+            }
+            if (isNaN(weight) || weight < 1 || weight > 100) {
+                document.getElementById('activity-error').textContent = 'Error Message: Weight is rejected.';
+                return;
+            }
+
+            activities.push({ name, weight });
+            document.getElementById('activity-name').value = '';
+            document.getElementById('activity-weight').value = '';
+
+            updateActivityTable();
+        }
+
+        function addGrade() {
+            const activityNo = parseInt(document.getElementById('activity-no').value);
+            const grade = parseInt(document.getElementById('grade').value);
+
+            document.getElementById('grade-error').textContent = '';
+
+            if (isNaN(grade) || grade < 0 || grade > 100) {
+                document.getElementById('grade-error').textContent = 'Error Message: Grade is rejected.';
+                return;
+            }
+            if (isNaN(activityNo) || activityNo < 1 || activityNo > activities.length) {
+                document.getElementById('grade-error').textContent = 'Error Message: Activity No is rejected.';
+                return;
+            }
+
+            activities[activityNo - 1].grade = grade;
+            document.getElementById('activity-no').value = '';
+            document.getElementById('grade').value = '';
+
+            updateActivityTable();
+        }
+
+        function removeActivity() {
+            if (activities.length === 0) {
+                document.getElementById('delete-error').textContent = 'Error Message: No more activities to remove.';
+                return;
+            }
+
+            activities.pop();
+            document.getElementById('delete-error').textContent = '';
+
+            updateActivityTable();
+        }
+    </script>
+</body>
+</html>
