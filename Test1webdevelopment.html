@@ -78,8 +78,8 @@
         }
 
         function newActivity() {
-            const name = document.getElementById('activity-name').value.trim();
-            const weight = parseInt(document.getElementById('activity-weight').value);
+            const name = document.getElementById('activity-name').value;
+            const weight = document.getElementById('activity-weight').value;
 
             document.getElementById('activity-error').textContent = '';
 
@@ -87,7 +87,7 @@
                 document.getElementById('activity-error').textContent = 'Error Message: Activity name is rejected.';
                 return;
             }
-            if (isNaN(weight) || weight < 1 || weight > 100) {
+            if (weight < 1 || weight > 100) {
                 document.getElementById('activity-error').textContent = 'Error Message: Weight is rejected.';
                 return;
             }
@@ -101,7 +101,7 @@
 
         function addGrade() {
             const activityNo = parseInt(document.getElementById('activity-no').value);
-            const grade = parseInt(document.getElementById('grade').value);
+            const grade = document.getElementById('grade').value;
 
             document.getElementById('grade-error').textContent = '';
 
